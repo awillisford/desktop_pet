@@ -1,34 +1,43 @@
 import tkinter as tk
+import time
 
-def update():
-    pass
+class Pet():
+    def __init__(self):
+        self.window = tk.Tk()
 
-def main():
-    window = tk.Tk()
+        # gif is list, each frame an element in list, 5 frames in gif
+        self.idle = [tk.PhotoImage(file='wisp.gif',format = 'gif -index %i' %(i)) for i in range(5)]
+        
+        self.frame_index = 0
+        self.current_image = self.idle[self.frame_index]
 
-    # gif is list, each frame an element in list, 5 frames in gif
-    idle = [tk.PhotoImage(file='wisp.gif',format = 'gif -index %i' %(i)) for i in range(5)]
+        # changing window appearances/functionality
+        self.window.overrideredirect(True) # make window frameless
+        self.window.attributes('-topmost', True) # window on top
+        self.window.wm_attributes('-transparentcolor', 'black') # turn black into transparency
+
+        self.label = tk.Label(self.window, bd=0, bg='black') # bd=border size, bg=background
+        self.label.configure(image=self.current_image) # add image to label
+        self.label.pack() # make label appear on window
+
+        self.x_pos = 715
+        self.y_pos = 511
+
+        self.window.geometry(f"24x36+{self.x_pos}+{self.y_pos}")
+        
+        # run update() 0ms after mainloop starts
+        self.window.after(0, self.update)
+        self.window.mainloop()
     
-    frame_index = 0
-    current_image = idle[frame_index]
+    def update(self):
+        self.frame_index = (self.frame_index + 1) % 5 # 5 frames in idle, circle back to zero at end
+        self.current_image = self.idle[self.frame_index]
 
-    # changing window appearances/functionality
-    window.overrideredirect(True) # make window frameless
-    window.attributes('-topmost', True) # window on top
-    window.wm_attributes('-transparentcolor', 'black') # turn black into transparency
+        self.label.configure(image=self.current_image)
+        self.label.pack()
 
-    label = tk.Label(window, bd=0, bg='black') # bd=border size, bg=background
-    label.configure(image=current_image) # add image to label
-    label.pack() # make label appear on window
+        self.window.after(50, self.update)
 
-    x_pos = 0
-    y_pos = 0
-
-    window.geometry(f"24x36+{x_pos}+{y_pos}")
-    
-    # run update() 0ms after mainloop starts
-    window.after(0, update)
-    window.mainloop()
 
 if __name__ == '__main__':
-    main()
+    Pet()
