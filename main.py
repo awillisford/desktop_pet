@@ -1,5 +1,8 @@
 import tkinter as tk
 
+def update():
+    pass
+
 def main():
     window = tk.Tk()
 
@@ -19,10 +22,12 @@ def main():
     label.pack() # make label appear on window
 
     x_pos = 0
-    y_pos = 500
+    y_pos = 0
 
-    window.geometry(f"64x64+{x_pos}+{y_pos}")
+    window.geometry(f"24x36+{x_pos}+{y_pos}")
     
+    # run update() 0ms after mainloop starts
+    window.after(0, update)
     window.mainloop()
 
 if __name__ == '__main__':
