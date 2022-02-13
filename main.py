@@ -1,5 +1,6 @@
 import tkinter as tk
 import time
+import pyautogui
 
 class Pet():
     def __init__(self):
@@ -33,10 +34,13 @@ class Pet():
         self.frame_index = (self.frame_index + 1) % 5 # 5 frames in idle, circle back to zero at end
         self.current_image = self.idle[self.frame_index]
 
-        self.label.configure(image=self.current_image)
-        self.label.pack()
+        self.x_pos, self.y_pos = pyautogui.position() # mouse position (x, y)
+        self.window.geometry(f"24x36+{self.x_pos + 50}+{self.y_pos + 50}") # 50 to right and 50 px down from mouse
 
-        self.window.after(50, self.update)
+        self.label.configure(image=self.current_image)
+        # self.label.pack()
+
+        self.window.after(49, self.update)
 
 
 if __name__ == '__main__':
