@@ -2,6 +2,7 @@ import tkinter as tk
 import time
 import pyautogui
 from PIL import Image, ImageSequence, ImageTk, ImageOps # imageOps for mirror
+import os.path
 
 class Pet():
     def __init__(self):
@@ -68,5 +69,11 @@ class Pet():
 
 
 if __name__ == '__main__':
+    # create mirrored gif from base asset 'wispL.gif'
+    if not os.path.isfile('assets/wispR.gif'):
+        img = Image.open('assets/wispL.gif')
+        img_mirror = [ImageOps.mirror(frame) for frame in ImageSequence.Iterator(img)]
+        img_mirror[0].save("assets/wispR.gif", save_all=True, append_images=img_mirror[1:])
+    
     Pet()
     
