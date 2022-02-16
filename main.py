@@ -3,10 +3,12 @@ import time
 import pyautogui
 from PIL import Image, ImageSequence, ImageTk, ImageOps # imageOps for mirror
 import os.path
+import math
 
 class Pet():
     def __init__(self):
         self.time = time.time() # keep track of time between animation frames
+        self.mouse_pos = None # for moving wisp in front of mouse direction
         
         # initialize wisp properties
         self.dim = (48,72)
@@ -56,14 +58,23 @@ class Pet():
 
             self.label.configure(image=self.current_image) # update window image
 
+        '''
+            magnitude of vector give closest distance
+            so --> sqrt(x^2 + y^2) = d
 
-        x_distance = x_mouse - self.x_pos
-        y_distance = y_mouse - self.y_pos
-        if abs(x_distance) >= abs(y_distance):
-            large_to_small = abs(x_distance / y_distance) # ratio of x:y
-        else:
-            large_to_small = abs(y_distance / x_distance) # ratio of y:x
-        self.window.geometry(f"{self.dim[0]}x{self.dim[1]}+{self.x_pos}+{self.y_pos}") 
+            x/magnitude -> x comp unit vector
+            y/magnitude -> y comp unit vector
+        '''
+        distance = [x_mouse - self.x_pos, y_mouse - self.y_pos] # distance vector
+        magnitude = math.sqrt(distance[0]*distance[0] + distance[1]*distance[1])
+        distance = [elem/magnitude for elem in distance] # distance unit vector
+        
+        if distance[0] != 0:
+            self.x_pos += distance[0] * self.speed
+        if distance[1] != 0:
+            self.y_pos += distance[1] * self.speed
+
+        self.window.geometry(f"{self.dim[0]}x{self.dim[1]}+{int(self.x_pos)}+{int(self.y_pos)}") 
 
         self.window.after(10, self.update)
 
